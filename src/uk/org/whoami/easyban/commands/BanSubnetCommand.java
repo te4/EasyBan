@@ -17,9 +17,9 @@ package uk.org.whoami.easyban.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import uk.org.whoami.easyban.ConsoleLogger;
 import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.settings.Settings;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 import uk.org.whoami.easyban.util.Subnet;
 
 public class BanSubnetCommand extends EasyBanCommand {

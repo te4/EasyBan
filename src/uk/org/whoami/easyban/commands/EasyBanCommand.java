@@ -20,8 +20,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.org.whoami.easyban.settings.Message;
-import uk.org.whoami.easyban.permission.Permission;
 
+//Updating by Fishrock123 <Fishrock123@rocketmail.com>
 public abstract class EasyBanCommand implements CommandExecutor {
     
     protected String admin;
@@ -33,10 +33,11 @@ public abstract class EasyBanCommand implements CommandExecutor {
     public boolean onCommand(CommandSender cs, Command cmnd, String cmd, String[] args) {
         admin = cs instanceof Player ? ((Player) cs).getName() : "Console";
         
-        if(Permission.hasPermission(cs, cmd)) {
+        if (cs.hasPermission("easyban." + cmd.toLowerCase())) {
             this.execute(cs, cmnd, cmd, args);
+            return true;
         }                
-        return true;
+        return false;
     }
     
     protected final void sendListToSender(CommandSender sender, String[] list) {

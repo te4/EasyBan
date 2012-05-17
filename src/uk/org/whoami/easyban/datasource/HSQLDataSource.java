@@ -22,7 +22,7 @@ import java.sql.Statement;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import uk.org.whoami.easyban.ConsoleLogger;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 
 public class HSQLDataSource extends SQLDataSource {
 

@@ -17,9 +17,13 @@ package uk.org.whoami.easyban.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import uk.org.whoami.easyban.ConsoleLogger;
-import uk.org.whoami.easyban.datasource.DataSource;
 
+import com.maxmind.geoip.LookupService;
+
+import uk.org.whoami.easyban.datasource.DataSource;
+import uk.org.whoami.easyban.util.ConsoleLogger;
+
+//Updating & cleanup by Fishrock123 <Fishrock123@rocketmail.com>
 public class UnbanCountryCommand extends EasyBanCommand {
 
     private DataSource database;
@@ -30,11 +34,21 @@ public class UnbanCountryCommand extends EasyBanCommand {
 
     @Override
     protected void execute(CommandSender cs, Command cmnd, String cmd, String[] args) {
-        if (args.length == 0) {
-            return;
+    	if (args.length == 0) {
+    		return;
         }
+    	
+    	if (!LookupService.hasCountryCode(args[0])) {
+    		if (LookupService.hasCountryName(args[0])) {
+    			args[0] = LookupService.getCountryCode(args[0]);
+    		} else {
+    			return;
+    		}
+    	}
+    	
         database.unbanCountry(args[0]);
-        cs.getServer().broadcastMessage(m._("A country has been unbanned: ") + args[0]);
-        ConsoleLogger.info(admin + " unbanned the country " + args[0]);
+        
+        cs.getServer().broadcastMessage(m._("A country has been unbanned: ") + LookupService.getCountryName(args[0]) + " (" + args[0] + ')');
+        ConsoleLogger.info(admin + " unbanned the country " + LookupService.getCountryName(args[0]) + " (" + args[0] + ')');
     }
 }

@@ -21,8 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import uk.org.whoami.easyban.ConsoleLogger;
 import uk.org.whoami.easyban.settings.Settings;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 
 /**
  *

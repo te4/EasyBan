@@ -18,8 +18,8 @@ package uk.org.whoami.easyban.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import uk.org.whoami.easyban.ConsoleLogger;
 import uk.org.whoami.easyban.settings.Settings;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 
 public class KickCommand extends EasyBanCommand {
 

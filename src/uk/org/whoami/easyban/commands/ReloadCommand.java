@@ -23,6 +23,7 @@ import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.settings.Settings;
 import uk.org.whoami.easyban.util.DNSBL;
 
+//Cleanup by Fishrock123 <Fishrock123@rocketmail.com>
 public class ReloadCommand extends EasyBanCommand {
 
     private DNSBL dnsbl;
@@ -40,7 +41,7 @@ public class ReloadCommand extends EasyBanCommand {
         database.reload();
         dnsbl.clearLookupService();
 
-        for(String dns : settings.getBlockLists()) {
+        for (String dns : settings.getBlockLists()) {
             dnsbl.addLookupService(dns);
         }
 

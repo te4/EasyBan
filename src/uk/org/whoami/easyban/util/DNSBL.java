@@ -28,7 +28,6 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import sun.net.dns.ResolverConfiguration;
-import uk.org.whoami.easyban.ConsoleLogger;
 
 public class DNSBL {
 
@@ -36,6 +35,7 @@ public class DNSBL {
     private DirContext ictx;
     private List<String> lookupServices = new ArrayList<String>();
 
+    @SuppressWarnings({ "unchecked", "rawtypes" }) // Fishrock123 - just compiler stuff
     public DNSBL() throws NamingException {
         StringBuilder dnsServers = new StringBuilder("");
         List nameservers = ResolverConfiguration.open().nameservers();

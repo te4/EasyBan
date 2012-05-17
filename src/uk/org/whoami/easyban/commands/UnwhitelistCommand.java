@@ -17,8 +17,8 @@ package uk.org.whoami.easyban.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import uk.org.whoami.easyban.ConsoleLogger;
 import uk.org.whoami.easyban.datasource.DataSource;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 
 public class UnwhitelistCommand extends EasyBanCommand {
 

@@ -23,14 +23,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import uk.org.whoami.easyban.datasource.DataSource;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import uk.org.whoami.easyban.ConsoleLogger;
-import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.settings.Message;
 import uk.org.whoami.easyban.settings.Settings;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 import uk.org.whoami.easyban.util.DNSBL;
 
+//Cleanup by Fishrock123 <Fishrock123@rocketmail.com>
 public class EasyBanPlayerListener implements Listener {
 
     private DataSource database;
@@ -42,7 +43,7 @@ public class EasyBanPlayerListener implements Listener {
         this.dnsbl = dnsbl;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         if (event.getPlayer() == null || !event.getResult().equals(Result.ALLOWED)) {
             return;
@@ -87,7 +88,7 @@ public class EasyBanPlayerListener implements Listener {
             return;
         }
 
-        if(dnsbl.isBlocked(ip)) {
+        if (dnsbl.isBlocked(ip)) {
             event.disallow(Result.KICK_BANNED, msg._("DNSBL Ban"));
             return;
         }
@@ -99,7 +100,7 @@ public class EasyBanPlayerListener implements Listener {
     }
 
     //This event is only called when some other plugin overwrites the PlayerLogin event
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (event.getPlayer() == null) {
             return;

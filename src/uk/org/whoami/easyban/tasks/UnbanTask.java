@@ -19,8 +19,8 @@ package uk.org.whoami.easyban.tasks;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import uk.org.whoami.easyban.ConsoleLogger;
 import uk.org.whoami.easyban.datasource.DataSource;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 
 public class UnbanTask implements Runnable {
 

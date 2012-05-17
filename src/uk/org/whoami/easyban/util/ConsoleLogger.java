@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.org.whoami.easyban;
+package uk.org.whoami.easyban.util;
 
 import java.util.logging.Logger;
 

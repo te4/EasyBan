@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sebastian KÃ¶hler <sebkoehler@whoami.org.uk>.
+ * Copyright 2011 Sebastian Kšhler <sebkoehler@whoami.org.uk>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,20 @@
 package uk.org.whoami.easyban.datasource;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.util.config.Configuration;
 import uk.org.whoami.easyban.settings.Settings;
 import uk.org.whoami.easyban.util.Subnet;
-import uk.org.whoami.geoip.util.ConsoleLogger;
 
-public class YamlDataSource implements DataSource {
+//Updating & cleanup by Fishrock123 <Fishrock123@rocketmail.com>
+public class YamlDataSource extends Configuration implements DataSource {
 
     private final String banPath = "bans";
     private final String historyPath = "history";
@@ -40,19 +42,15 @@ public class YamlDataSource implements DataSource {
     private ArrayList<String> countries;
     private ArrayList<String> whitelist;
 
-    private FileConfiguration customConfig = null;
-    private File customConfigFile = null;
-
-    @SuppressWarnings("unchecked")
     public YamlDataSource() {
-        customConfigFile = new File(Settings.DATABASE_FILE);
+        super(new File(Settings.DATABASE_FILE));
         reload();
     }
 
     @Override
     public synchronized void addIpToHistory(String nick, String ip) {
-        if(history.containsKey(nick)) {
-            if(!history.get(nick).contains(ip)) {
+        if (history.containsKey(nick)) {
+            if (!history.get(nick).contains(ip)) {
                 history.get(nick).add(ip);
             }
         } else {
@@ -65,13 +63,13 @@ public class YamlDataSource implements DataSource {
     @Override
     public synchronized void banNick(String nick, String admin, String reason,
             Calendar until) {
-        if(!bans.containsKey(nick)) {
+        if (!bans.containsKey(nick)) {
             HashMap<String, String> tmp = new HashMap<String, String>();
             tmp.put("admin", admin);
-            if(reason != null) {
+            if (reason != null) {
                 tmp.put("reason", reason);
             }
-            if(until != null) {
+            if (until != null) {
                 tmp.put("until", String.valueOf(until.getTimeInMillis()));
             }
             bans.put(nick, tmp);
@@ -81,16 +79,15 @@ public class YamlDataSource implements DataSource {
 
     @Override
     public synchronized void unbanNick(String nick) {
-        if(bans.containsKey(nick)) {
+        if (bans.containsKey(nick)) {
             bans.remove(nick);
             save();
         }
     }
 
     @Override
-    public synchronized void banSubnet(Subnet subnet, String admin,
-            String reason) {
-        if(!subnets.containsKey(subnet.toString())) {
+    public synchronized void banSubnet(Subnet subnet, String admin, String reason) {
+        if (!subnets.containsKey(subnet.toString())) {
             HashMap<String, String> tmp = new HashMap<String, String>();
             tmp.put("admin", admin);
             tmp.put("reason", reason);
@@ -101,7 +98,7 @@ public class YamlDataSource implements DataSource {
 
     @Override
     public synchronized void unbanSubnet(Subnet subnet) {
-        if(subnets.containsKey(subnet.toString())) {
+        if (subnets.containsKey(subnet.toString())) {
             subnets.remove(subnet.toString());
             save();
         }
@@ -109,7 +106,7 @@ public class YamlDataSource implements DataSource {
 
     @Override
     public synchronized void banCountry(String code) {
-        if(!countries.contains(code)) {
+        if (!countries.contains(code)) {
             countries.add(code);
             save();
         }
@@ -117,7 +114,7 @@ public class YamlDataSource implements DataSource {
 
     @Override
     public synchronized void whitelist(String player) {
-        if(!whitelist.contains(player)) {
+        if (!whitelist.contains(player)) {
             whitelist.add(player);
             save();
         }
@@ -137,9 +134,9 @@ public class YamlDataSource implements DataSource {
     public synchronized boolean isIpBanned(String ip) {
         Iterator<String> it = bans.keySet().iterator();
 
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             String bannedNick = it.next();
-            if(history.containsKey(bannedNick) && history.get(bannedNick).
+            if (history.containsKey(bannedNick) && history.get(bannedNick).
                     contains(ip)) {
                 return true;
             }
@@ -150,10 +147,10 @@ public class YamlDataSource implements DataSource {
     @Override
     public boolean isSubnetBanned(String ip) {
         Iterator<String> itl = subnets.keySet().iterator();
-        while(itl.hasNext()) {
+        while (itl.hasNext()) {
             try {
                 Subnet subnet = new Subnet(itl.next());
-                if(subnet.isIpInSubnet(InetAddress.getByName(ip))) {
+                if (subnet.isIpInSubnet(InetAddress.getByName(ip))) {
                     return true;
                 }
             } catch(UnknownHostException ex) {
@@ -209,8 +206,8 @@ public class YamlDataSource implements DataSource {
     public String[] getNicks(String ip) {
         ArrayList<String> nicks = new ArrayList<String>();
 
-        for(Entry<String,List<String>> entry:history.entrySet()) {
-            if(entry.getValue().contains(ip)) {
+        for (Entry<String,List<String>> entry:history.entrySet()) {
+            if (entry.getValue().contains(ip)) {
                 nicks.add(entry.getKey());
             }
         }
@@ -221,9 +218,9 @@ public class YamlDataSource implements DataSource {
     public synchronized HashMap<String, Long> getTempBans() {
         HashMap<String, Long> tmpBans = new HashMap<String, Long>();
         Iterator<String> it = bans.keySet().iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             String nick = it.next();
-            if(bans.get(nick).containsKey("until")) {
+            if (bans.get(nick).containsKey("until")) {
                 tmpBans.put(nick, new Long(bans.get(nick).get("until")));
             }
         }
@@ -232,7 +229,7 @@ public class YamlDataSource implements DataSource {
 
     @Override
     public synchronized HashMap<String, String> getBanInformation(String nick) {
-        if(bans.containsKey(nick)) {
+        if (bans.containsKey(nick)) {
             return bans.get(nick);
         } else {
             return null;
@@ -241,49 +238,41 @@ public class YamlDataSource implements DataSource {
 
     @Override
     public synchronized HashMap<String, String> getBanInformation(Subnet subnet) {
-        if(subnets.containsKey(subnet.toString())) {
+        if (subnets.containsKey(subnet.toString())) {
             return subnets.get(subnet.toString());
         } else {
             return null;
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public final void reload() {
-        customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-
-        if(customConfig.get(banPath) == null) {
-            customConfig.set(banPath,
+        load();
+        if (getProperty(banPath) == null) {
+            setProperty(banPath,
                     new HashMap<String, HashMap<String, String>>());
         }
-        if(customConfig.get(historyPath) == null) {
-            customConfig.set(historyPath, new HashMap<String, List<String>>());
+        if (getProperty(historyPath) == null) {
+            setProperty(historyPath, new HashMap<String, List<String>>());
         }
-        if(customConfig.get(subnetPath) == null) {
-            customConfig.set(subnetPath,
+        if (getProperty(subnetPath) == null) {
+            setProperty(subnetPath,
                     new HashMap<String, HashMap<String, String>>());
         }
-        if(customConfig.get(countryPath) == null) {
-            customConfig.set(countryPath, new ArrayList<String>());
+        if (getProperty(countryPath) == null) {
+            setProperty(countryPath, new ArrayList<String>());
         }
-        if(customConfig.get(whitelistPath) == null) {
-            customConfig.set(whitelistPath, new ArrayList<String>());
+        if (getProperty(whitelistPath) == null) {
+            setProperty(whitelistPath, new ArrayList<String>());
         }
-        history = (HashMap<String, List<String>>) customConfig.get(historyPath);
-        bans = (HashMap<String, HashMap<String, String>>) customConfig.get(banPath);
-        subnets = (HashMap<String, HashMap<String, String>>) customConfig.get(
+        history = (HashMap<String, List<String>>) getProperty(historyPath);
+        bans = (HashMap<String, HashMap<String, String>>) getProperty(banPath);
+        subnets = (HashMap<String, HashMap<String, String>>) getProperty(
                 subnetPath);
-        countries = (ArrayList<String>) customConfig.get(countryPath);
-        whitelist = (ArrayList<String>) customConfig.get(whitelistPath);
+        countries = (ArrayList<String>) getProperty(countryPath);
+        whitelist = (ArrayList<String>) getProperty(whitelistPath);
         save();
-    }
-
-    private void save() {
-        try {
-            customConfig.save(customConfigFile);
-        } catch (IOException ex) {
-            ConsoleLogger.info("Error:" + ex.getMessage());
-        }
     }
 
     @Override

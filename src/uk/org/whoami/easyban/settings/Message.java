@@ -16,21 +16,18 @@
 package uk.org.whoami.easyban.settings;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-public class Message {
+import org.bukkit.util.config.Configuration;
+
+//Cleanup by Fishrock123 <Fishrock123@rocketmail.com>
+public class Message extends Configuration {
 
     private static Message singleton = null;
     private final HashMap<String, String> map = new HashMap<String, String>();
 
-    private FileConfiguration customConfig = null;
-    private File customConfigFile = null;
-
     private Message() {
-        customConfigFile = new File(Settings.MESSAGE_FILE);
+        super(new File(Settings.MESSAGE_FILE));
         loadDefaults();
         getMessages();
     }
@@ -74,32 +71,26 @@ public class Message {
 
     public String _(String message) {
         String ret = map.get(message);
-        if(ret != null) {
+        if (ret != null) {
             return ret.replace("&", "\u00a7");
         }
         return message;
     }
 
     private void getMessages() {
-        customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-
-        for(String key : map.keySet()) {
-            if(this.customConfig.getString(key) == null) {
-                this.customConfig.set(key, map.get(key));
-            } else {
-                map.put(key, this.customConfig.getString(key));
-            }
-        }
-
-        try {
-            customConfig.save(customConfigFile);
-        } catch (IOException ex) {
-            uk.org.whoami.geoip.util.ConsoleLogger.info("Error:" + ex.getMessage());
-        }
+		this.load();
+		for (String key : map.keySet()) {
+			if (this.getString(key) == null) {
+				this.setProperty(key, map.get(key));
+			} else {
+				map.put(key, this.getString(key));
+			}
+		}
+		this.save();
     }
 
     public static Message getInstance() {
-        if(singleton == null) {
+        if (singleton == null) {
             singleton = new Message();
         }
         return singleton;

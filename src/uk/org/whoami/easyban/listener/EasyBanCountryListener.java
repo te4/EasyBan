@@ -17,16 +17,18 @@ package uk.org.whoami.easyban.listener;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import uk.org.whoami.easyban.ConsoleLogger;
-import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.settings.Message;
+import uk.org.whoami.easyban.util.ConsoleLogger;
+import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.geoip.GeoIPLookup;
 
+//Cleanup by Fishrock123 <Fishrock123@rocketmail.com>
 public class EasyBanCountryListener implements Listener {
 
     private DataSource database;
@@ -38,7 +40,7 @@ public class EasyBanCountryListener implements Listener {
         this.geo = geo;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent evt) {
         if (evt.getPlayer() == null || !evt.getResult().equals(Result.ALLOWED)) {
             return;

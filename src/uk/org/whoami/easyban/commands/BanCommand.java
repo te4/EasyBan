@@ -22,9 +22,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import uk.org.whoami.easyban.ConsoleLogger;
 import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.settings.Settings;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 import uk.org.whoami.easyban.util.Subnet;
 
 public class BanCommand extends EasyBanCommand {

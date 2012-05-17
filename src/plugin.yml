@@ -1,8 +1,10 @@
 name: EasyBan
 main: uk.org.whoami.easyban.EasyBan
-version: 2.2
+version: 3.0.2 B:20
 description: 'Ban people/subnets/countries from "offline" Servers'
-author: whoami
+authors:
+- whoami
+- Fishrock123
 website: 'http://dev.bukkit.org/server-mods/easyban/'
 softdepend: [GeoIPTools]
 commands:
@@ -57,7 +59,7 @@ commands:
     elistwhite:
         description: Show whitelisted players
         usage: /elistwhite
-    reload:
+    ereload:
         description: Reload configuration file
         usage: /ereload
 permissions:

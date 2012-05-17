@@ -24,15 +24,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import org.hsqldb.types.Types;
-
-import uk.org.whoami.easyban.ConsoleLogger;
+import uk.org.whoami.easyban.util.ConsoleLogger;
 import uk.org.whoami.easyban.util.Subnet;
 
+//Updating by Fishrock123 <Fishrock123@rocketmail.com>
 public abstract class SQLDataSource implements DataSource {
 
     protected Connection con;
@@ -578,8 +578,11 @@ public abstract class SQLDataSource implements DataSource {
                 }
             }
         }
-
-        return map;
+        if (map.isEmpty()) {
+        	return null;
+        } else {
+        	return map;
+        }
     }
 
     @Override
@@ -612,8 +615,11 @@ public abstract class SQLDataSource implements DataSource {
                 }
             }
         }
-
-        return map;
+        if (map.isEmpty()) {
+        	return null;
+        } else {
+        	return map;
+        }
     }
 
     @Override
@@ -641,7 +647,10 @@ public abstract class SQLDataSource implements DataSource {
                 }
             }
         }
-
-        return map;
+        if (map.isEmpty()) {
+        	return null;
+        } else {
+        	return map;
+        }
     }
 }
