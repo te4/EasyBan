@@ -24,11 +24,11 @@ public class Subnet {
     short[] mask;
 
     public Subnet(String subnet) throws IllegalArgumentException {
-        if(!subnet.contains("/")) {
+        if (!subnet.contains("/")) {
             throw new IllegalArgumentException("Invalid Subnet");
         }
         String[] sub = subnet.split("/");
-        if(sub.length != 2) {
+        if (sub.length != 2) {
             throw new IllegalArgumentException("Invalid Subnet");
         }
 
@@ -38,7 +38,7 @@ public class Subnet {
             throw new IllegalArgumentException("Invalid Networkprefix");
         }
 
-        if(Subnet.isParseableInteger(sub[1])) {
+        if (Subnet.isParseableInteger(sub[1])) {
             int cidr = Integer.parseInt(sub[1]);
             if(cidr < 0 || cidr > 32) {
                 throw new IllegalArgumentException("Invalid CIDR-Mask");
@@ -159,7 +159,7 @@ public class Subnet {
     public static boolean isParseableInteger(String s) {
         try {
             Integer.parseInt(s);
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             return false;
         }
         return true;

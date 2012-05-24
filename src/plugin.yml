@@ -1,6 +1,6 @@
 name: EasyBan
 main: uk.org.whoami.easyban.EasyBan
-version: 3.0.2 B:20
+version: 3.0.2 B:21
 description: 'Ban people/subnets/countries from "offline" Servers'
 authors:
 - whoami
