@@ -21,8 +21,6 @@ import java.io.IOException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.maxmind.geoip.LookupService;
-
 import uk.org.whoami.easyban.commands.AlternativeCommand;
 import uk.org.whoami.easyban.commands.BanCommand;
 import uk.org.whoami.easyban.commands.BanCountryCommand;
@@ -56,6 +54,8 @@ import uk.org.whoami.easyban.util.Metrics.Graph;
 import uk.org.whoami.geoip.GeoIPLookup;
 import uk.org.whoami.geoip.GeoIPTools;
 
+import com.maxmind.geoip.LookupService;
+
 //Updating & cleanup by Fishrock123 <Fishrock123@rocketmail.com>
 public class EasyBan extends JavaPlugin {
 
@@ -66,11 +66,11 @@ public class EasyBan extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.getServer().getScheduler().cancelTasks(this);
+        getServer().getScheduler().cancelTasks(this);
         if (database != null) {
             database.close();
         }
-        ConsoleLogger.info("EasyBan disabled; Version: " + this.getDescription().getVersion());
+        ConsoleLogger.info("EasyBan disabled; Version: " + getDescription().getVersion());
     }
 
     @Override
@@ -87,7 +87,7 @@ public class EasyBan extends JavaPlugin {
                 } catch (Exception ex) {
                     ConsoleLogger.info(ex.getMessage());
                     ConsoleLogger.info("Can't load database");
-                    this.getServer().getPluginManager().disablePlugin(this);
+                    getServer().getPluginManager().disablePlugin(this);
                     return;
                 }
             case HSQL:
@@ -97,7 +97,7 @@ public class EasyBan extends JavaPlugin {
                 } catch (Exception ex) {
                     ConsoleLogger.info(ex.getMessage());
                     ConsoleLogger.info("Can't load database");
-                    this.getServer().getPluginManager().disablePlugin(this);
+                    getServer().getPluginManager().disablePlugin(this);
                     return;
                 }
         }
@@ -109,79 +109,79 @@ public class EasyBan extends JavaPlugin {
             }
 
             EasyBanPlayerListener l = new EasyBanPlayerListener(database, dnsbl);
-            this.getServer().getPluginManager().registerEvents(l, this);
-            this.getServer().getPluginManager().registerEvents(l, this);
+            getServer().getPluginManager().registerEvents(l, this);
+            getServer().getPluginManager().registerEvents(l, this);
         } catch (Exception ex) {
             ConsoleLogger.info(ex.getMessage());
             ConsoleLogger.info("DNSBL error");
-            this.getServer().getPluginManager().disablePlugin(this);
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         geo = getGeoIPLookup();
         if (geo != null) {
-            this.getServer().getPluginManager().registerEvents(new EasyBanCountryListener(database, geo), this);
+            getServer().getPluginManager().registerEvents(new EasyBanCountryListener(database, geo), this);
         }
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new UnbanTask(database), 60L, 1200L);
+        getServer().getScheduler().scheduleAsyncRepeatingTask(this, new UnbanTask(database), 60L, 1200L);
 
-        this.getCommand("ekick").setExecutor(new KickCommand());
-        this.getCommand("eban").setExecutor(new BanCommand(database));
-        this.getCommand("eunban").setExecutor(new UnbanCommand(database));
-        this.getCommand("ehistory").setExecutor(new HistoryCommand(database));
-        this.getCommand("ealternative").setExecutor(new AlternativeCommand(database));
-        this.getCommand("ebaninfo").setExecutor(new BanInfoCommand(database));
-        this.getCommand("elistbans").setExecutor(new ListBansCommand(database));
-        this.getCommand("elisttmpbans").setExecutor(new ListTemporaryBansCommand(database));
-        this.getCommand("ebansubnet").setExecutor(new BanSubnetCommand(database));
-        this.getCommand("eunbansubnet").setExecutor(new UnbanSubnetCommand(database));
-        this.getCommand("elistsubnets").setExecutor(new ListSubnetBansCommand(database));
-        this.getCommand("ebancountry").setExecutor(new BanCountryCommand(database));
-        this.getCommand("eunbancountry").setExecutor(new UnbanCountryCommand(database));
-        this.getCommand("elistcountries").setExecutor(new ListCountryBansCommand(database));
-        this.getCommand("ewhitelist").setExecutor(new WhitelistCommand(database));
-        this.getCommand("eunwhitelist").setExecutor(new UnwhitelistCommand(database));
-        this.getCommand("elistwhite").setExecutor(new ListWhitelistCommand(database));
-        this.getCommand("ereload").setExecutor(new ReloadCommand(database, dnsbl));
+        getCommand("ekick").setExecutor(new KickCommand());
+        getCommand("eban").setExecutor(new BanCommand(database));
+        getCommand("eunban").setExecutor(new UnbanCommand(database));
+        getCommand("ehistory").setExecutor(new HistoryCommand(database));
+        getCommand("ealternative").setExecutor(new AlternativeCommand(database));
+        getCommand("ebaninfo").setExecutor(new BanInfoCommand(database));
+        getCommand("elistbans").setExecutor(new ListBansCommand(database));
+        getCommand("elisttmpbans").setExecutor(new ListTemporaryBansCommand(database));
+        getCommand("ebansubnet").setExecutor(new BanSubnetCommand(database));
+        getCommand("eunbansubnet").setExecutor(new UnbanSubnetCommand(database));
+        getCommand("elistsubnets").setExecutor(new ListSubnetBansCommand(database));
+        getCommand("ebancountry").setExecutor(new BanCountryCommand(database));
+        getCommand("eunbancountry").setExecutor(new UnbanCountryCommand(database));
+        getCommand("elistcountries").setExecutor(new ListCountryBansCommand(database));
+        getCommand("ewhitelist").setExecutor(new WhitelistCommand(database));
+        getCommand("eunwhitelist").setExecutor(new UnwhitelistCommand(database));
+        getCommand("elistwhite").setExecutor(new ListWhitelistCommand(database));
+        getCommand("ereload").setExecutor(new ReloadCommand(database, dnsbl));
 
         try {
-        	
+
 		    Metrics metrics = new Metrics(this);
-		    
+
 		    Graph banGraph = metrics.createGraph("Ban data");
-		    
-		    banGraph.addPlotter(new Metrics.Plotter("Nickname Bans") {	
+
+		    banGraph.addPlotter(new Metrics.Plotter("Nickname Bans") {
 				@Override
 				public int getValue() {
 					return database.getBannedNicks().length;
 				}
 			});
-		    banGraph.addPlotter(new Metrics.Plotter("Subnet Bans") {	
+		    banGraph.addPlotter(new Metrics.Plotter("Subnet Bans") {
 				@Override
 				public int getValue() {
 					return database.getBannedSubnets().length;
 				}
 			});
-		    banGraph.addPlotter(new Metrics.Plotter("Temporary bans") {	
+		    banGraph.addPlotter(new Metrics.Plotter("Temporary bans") {
 				@Override
 				public int getValue() {
-					return database.getTempBans().size();
+					return database.getTempBans() != null ? database.getTempBans().size() : 0;
 				}
 			});
-		    
+
 		    if (geo != null) {
-		    	
-		    	banGraph.addPlotter(new Metrics.Plotter("Country bans") {	
+
+		    	banGraph.addPlotter(new Metrics.Plotter("Country bans") {
 		    		@Override
 		    		public int getValue() {
 						return database.getBannedCountries().length;
 					}
 				});
-		    	 
+
 		    	Graph countryGraph = metrics.createGraph("Commonly Banned Countries");
-				    
+
 				for (String ccode : database.getBannedCountries()) {
-				    countryGraph.addPlotter(new Metrics.Plotter(LookupService.getCountryName(ccode)) {	
+				    countryGraph.addPlotter(new Metrics.Plotter(LookupService.getCountryName(ccode)) {
 						@Override
 						public int getValue() {
 							return 1;
@@ -189,22 +189,20 @@ public class EasyBan extends JavaPlugin {
 					});
 				}
 		    }
-		    
+
 		    metrics.start();
-		    
+
 		} catch (IOException e) {
 			ConsoleLogger.info(e.getMessage());
 		}
-        
-        ConsoleLogger.info("EasyBan enabled; Version: " + this.getDescription().
-                getVersion());
+
+        ConsoleLogger.info("EasyBan enabled; Version: " + getDescription().getVersion());
     }
 
     private GeoIPLookup getGeoIPLookup() {
-        Plugin pl = this.getServer().getPluginManager().getPlugin("GeoIPTools");
+        Plugin pl = getServer().getPluginManager().getPlugin("GeoIPTools");
         if (pl != null) {
-            return ((GeoIPTools) pl).getGeoIPLookup(GeoIPLookup.COUNTRYDATABASE
-                    | GeoIPLookup.IPV6DATABASE);
+            return ((GeoIPTools)pl).getGeoIPLookup();
         } else {
             return null;
         }

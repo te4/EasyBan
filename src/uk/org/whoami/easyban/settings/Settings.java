@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.util.config.Configuration;
+import old.org.bukkit.util.config.Configuration;
 
 import uk.org.whoami.easyban.datasource.DataSource.DataSourceType;
 import uk.org.whoami.easyban.util.ConsoleLogger;

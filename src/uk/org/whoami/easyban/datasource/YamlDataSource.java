@@ -24,7 +24,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import org.bukkit.util.config.Configuration;
+
+import old.org.bukkit.util.config.Configuration;
+
 import uk.org.whoami.easyban.settings.Settings;
 import uk.org.whoami.easyban.util.Subnet;
 
