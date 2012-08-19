@@ -245,7 +245,7 @@ public abstract class SQLDataSource implements DataSource {
         try {
             createNick(nick);
             pst = con.prepareStatement("INSERT INTO whitelist (player_id) VALUES("
-                    + "SELECT player_id FROM player WHERE player=?"
+                    + "(SELECT player_id FROM player WHERE player=?)"
                     + ");");
             pst.setString(1, nick);
             pst.executeUpdate();
