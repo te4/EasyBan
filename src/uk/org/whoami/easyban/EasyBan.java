@@ -202,8 +202,7 @@ public class EasyBan extends JavaPlugin {
     private GeoIPLookup getGeoIPLookup() {
         Plugin pl = getServer().getPluginManager().getPlugin("GeoIPTools");
         if (pl != null) {
-            return ((GeoIPTools) pl).getGeoIPLookup(GeoIPLookup.COUNTRYDATABASE
-                    | GeoIPLookup.IPV6DATABASE);
+            return ((GeoIPTools)pl).getGeoIPLookup();
         } else {
             return null;
         }

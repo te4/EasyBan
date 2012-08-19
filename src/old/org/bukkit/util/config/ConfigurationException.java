@@ -1,4 +1,4 @@
-package org.bukkit.util.config;
+package old.org.bukkit.util.config;
 
 /*
  * Revived classes from a now-ancient version of the bukkit api.

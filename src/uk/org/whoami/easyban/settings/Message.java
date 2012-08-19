@@ -18,7 +18,7 @@ package uk.org.whoami.easyban.settings;
 import java.io.File;
 import java.util.HashMap;
 
-import org.bukkit.util.config.Configuration;
+import old.org.bukkit.util.config.Configuration;
 
 //Cleanup by Fishrock123 <Fishrock123@rocketmail.com>
 public class Message extends Configuration {
