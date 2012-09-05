@@ -578,11 +578,11 @@ public abstract class SQLDataSource implements DataSource {
                 }
             }
         }
-        if (map.isEmpty()) {
-        	return null;
-        } else {
+//        if (map.isEmpty()) {
+//        	return null;
+//        } else {
         	return map;
-        }
+//        }
     }
 
     @Override
