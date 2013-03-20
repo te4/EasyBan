@@ -19,7 +19,9 @@ package uk.org.whoami.easyban.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import uk.org.whoami.easyban.EasyBan;
 import uk.org.whoami.easyban.datasource.DataSource;
+import uk.org.whoami.easyban.listener.EasyBanPlayerListener;
 import uk.org.whoami.easyban.settings.Settings;
 import uk.org.whoami.easyban.util.DNSBL;
 
@@ -28,9 +30,10 @@ public class ReloadCommand extends EasyBanCommand {
 
     private DNSBL dnsbl;
     private DataSource database;
+    private EasyBanPlayerListener listener;
     private Settings settings = Settings.getInstance();
 
-    public ReloadCommand(DataSource database, DNSBL dnsbl) {
+    public ReloadCommand(DataSource database, DNSBL dnsbl, EasyBanPlayerListener listener) {
         this.database = database;
         this.dnsbl = dnsbl;
     }
@@ -40,6 +43,7 @@ public class ReloadCommand extends EasyBanCommand {
         settings.reload();
         database.reload();
         dnsbl.clearLookupService();
+        listener.setGeo(EasyBan.getGeoIPLookup());
 
         for (String dns : settings.getBlockLists()) {
             dnsbl.addLookupService(dns);

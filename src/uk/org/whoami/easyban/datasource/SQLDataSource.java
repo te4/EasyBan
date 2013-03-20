@@ -37,8 +37,7 @@ public abstract class SQLDataSource implements DataSource {
 
     protected Connection con;
 
-    protected abstract void connect() throws ClassNotFoundException,
-                                             SQLException;
+    protected abstract void connect() throws ClassNotFoundException, SQLException;
 
     protected abstract void setup() throws SQLException;
 
@@ -92,8 +91,7 @@ public abstract class SQLDataSource implements DataSource {
     }
 
     @Override
-    public synchronized void banNick(String nick, String admin, String reason,
-                                     Calendar until) {
+    public synchronized void banNick(String nick, String admin, String reason, Calendar until) {
         PreparedStatement pst = null;
         try {
             createNick(nick);
@@ -150,8 +148,7 @@ public abstract class SQLDataSource implements DataSource {
     }
 
     @Override
-    public synchronized void banSubnet(Subnet subnet, String admin,
-                                       String reason) {
+    public synchronized void banSubnet(Subnet subnet, String admin, String reason) {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement("INSERT INTO subnet_ban (subnet,admin,reason) VALUES("

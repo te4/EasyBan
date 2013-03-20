@@ -18,6 +18,7 @@ package uk.org.whoami.easyban;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,7 +44,6 @@ import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.datasource.HSQLDataSource;
 import uk.org.whoami.easyban.datasource.MySQLDataSource;
 import uk.org.whoami.easyban.datasource.YamlDataSource;
-import uk.org.whoami.easyban.listener.EasyBanCountryListener;
 import uk.org.whoami.easyban.listener.EasyBanPlayerListener;
 import uk.org.whoami.easyban.settings.Settings;
 import uk.org.whoami.easyban.tasks.UnbanTask;
@@ -101,6 +101,8 @@ public class EasyBan extends JavaPlugin {
                     return;
                 }
         }
+
+        EasyBanPlayerListener l;
         try {
             dnsbl = new DNSBL();
 
@@ -108,9 +110,9 @@ public class EasyBan extends JavaPlugin {
                 dnsbl.addLookupService(bl);
             }
 
-            EasyBanPlayerListener l = new EasyBanPlayerListener(database, dnsbl);
+            l = new EasyBanPlayerListener(database, dnsbl).setGeo(getGeoIPLookup());
             getServer().getPluginManager().registerEvents(l, this);
-            getServer().getPluginManager().registerEvents(l, this);
+
         } catch (Exception ex) {
             ConsoleLogger.info(ex.getMessage());
             ConsoleLogger.info("DNSBL error");
@@ -118,12 +120,7 @@ public class EasyBan extends JavaPlugin {
             return;
         }
 
-        geo = getGeoIPLookup();
-        if (geo != null) {
-            getServer().getPluginManager().registerEvents(new EasyBanCountryListener(database, geo), this);
-        }
-
-        getServer().getScheduler().scheduleAsyncRepeatingTask(this, new UnbanTask(database), 60L, 1200L);
+        getServer().getScheduler().runTaskTimerAsynchronously(this, new UnbanTask(database), 60L, 1200L);
 
         getCommand("ekick").setExecutor(new KickCommand());
         getCommand("eban").setExecutor(new BanCommand(database));
@@ -142,55 +139,55 @@ public class EasyBan extends JavaPlugin {
         getCommand("ewhitelist").setExecutor(new WhitelistCommand(database));
         getCommand("eunwhitelist").setExecutor(new UnwhitelistCommand(database));
         getCommand("elistwhite").setExecutor(new ListWhitelistCommand(database));
-        getCommand("ereload").setExecutor(new ReloadCommand(database, dnsbl));
+        getCommand("ereload").setExecutor(new ReloadCommand(database, dnsbl, l));
 
         try {
 
-		    Metrics metrics = new Metrics(this);
+        	Metrics metrics = new Metrics(this);
 
-		    Graph banGraph = metrics.createGraph("Ban data");
+			Graph banGraph = metrics.createGraph("Ban data");
 
-		    banGraph.addPlotter(new Metrics.Plotter("Nickname Bans") {
+			banGraph.addPlotter(new Metrics.Plotter("Nickname Bans") {
 				@Override
 				public int getValue() {
 					return database.getBannedNicks().length;
 				}
 			});
-		    banGraph.addPlotter(new Metrics.Plotter("Subnet Bans") {
+			banGraph.addPlotter(new Metrics.Plotter("Subnet Bans") {
 				@Override
 				public int getValue() {
 					return database.getBannedSubnets().length;
 				}
 			});
-		    banGraph.addPlotter(new Metrics.Plotter("Temporary bans") {
+			banGraph.addPlotter(new Metrics.Plotter("Temporary bans") {
 				@Override
 				public int getValue() {
 					return database.getTempBans() != null ? database.getTempBans().size() : 0;
 				}
 			});
 
-		    if (geo != null) {
+			if (geo != null) {
 
-		    	banGraph.addPlotter(new Metrics.Plotter("Country bans") {
-		    		@Override
-		    		public int getValue() {
+				banGraph.addPlotter(new Metrics.Plotter("Country bans") {
+					@Override
+					public int getValue() {
 						return database.getBannedCountries().length;
 					}
 				});
 
-		    	Graph countryGraph = metrics.createGraph("Commonly Banned Countries");
+				Graph countryGraph = metrics.createGraph("Commonly Banned Countries");
 
 				for (String ccode : database.getBannedCountries()) {
-				    countryGraph.addPlotter(new Metrics.Plotter(LookupService.getCountryName(ccode)) {
+					countryGraph.addPlotter(new Metrics.Plotter(LookupService.getCountryName(ccode)) {
 						@Override
 						public int getValue() {
 							return 1;
 						}
 					});
 				}
-		    }
+			}
 
-		    metrics.start();
+			metrics.start();
 
 		} catch (IOException e) {
 			ConsoleLogger.info(e.getMessage());
@@ -199,8 +196,8 @@ public class EasyBan extends JavaPlugin {
         ConsoleLogger.info("EasyBan enabled; Version: " + getDescription().getVersion());
     }
 
-    private GeoIPLookup getGeoIPLookup() {
-        Plugin pl = getServer().getPluginManager().getPlugin("GeoIPTools");
+    public static GeoIPLookup getGeoIPLookup() {
+        Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("GeoIPTools");
         if (pl != null) {
             return ((GeoIPTools)pl).getGeoIPLookup();
         } else {
