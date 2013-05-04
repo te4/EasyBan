@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import old.org.bukkit.util.config.Configuration;
-
 import uk.org.whoami.easyban.settings.Settings;
 import uk.org.whoami.easyban.util.Subnet;
 
@@ -63,8 +62,7 @@ public class YamlDataSource extends Configuration implements DataSource {
     }
 
     @Override
-    public synchronized void banNick(String nick, String admin, String reason,
-            Calendar until) {
+    public synchronized void banNick(String nick, String admin, String reason, Calendar until) {
         if (!bans.containsKey(nick)) {
             HashMap<String, String> tmp = new HashMap<String, String>();
             tmp.put("admin", admin);
@@ -270,8 +268,7 @@ public class YamlDataSource extends Configuration implements DataSource {
         }
         history = (HashMap<String, List<String>>) getProperty(historyPath);
         bans = (HashMap<String, HashMap<String, String>>) getProperty(banPath);
-        subnets = (HashMap<String, HashMap<String, String>>) getProperty(
-                subnetPath);
+        subnets = (HashMap<String, HashMap<String, String>>) getProperty(subnetPath);
         countries = (ArrayList<String>) getProperty(countryPath);
         whitelist = (ArrayList<String>) getProperty(whitelistPath);
         save();

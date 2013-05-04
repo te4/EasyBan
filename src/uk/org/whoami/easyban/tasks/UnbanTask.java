@@ -19,6 +19,7 @@ package uk.org.whoami.easyban.tasks;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import uk.org.whoami.easyban.datasource.DataSource;
 import uk.org.whoami.easyban.util.ConsoleLogger;
 
@@ -35,9 +36,9 @@ public class UnbanTask implements Runnable {
         Calendar cal = Calendar.getInstance();
         HashMap<String,Long> tmpBans = data.getTempBans();
         Iterator<String> it = tmpBans.keySet().iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             String name = it.next();
-            if(tmpBans.get(name) != 100000 && (cal.getTimeInMillis() > tmpBans.get(name))) {
+            if (tmpBans.get(name) != 100000 && (cal.getTimeInMillis() > tmpBans.get(name))) {
                 data.unbanNick(name);
                 ConsoleLogger.info("Temporary ban for "+ name +" has been removed");
             }

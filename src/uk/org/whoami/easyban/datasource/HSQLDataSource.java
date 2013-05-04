@@ -28,9 +28,8 @@ public class HSQLDataSource extends SQLDataSource {
 
     private String path;
 
-    public HSQLDataSource(JavaPlugin plugin) throws ClassNotFoundException,
-            SQLException {
-        this.path = plugin.getDataFolder().getAbsolutePath() + "/bans";
+    public HSQLDataSource(JavaPlugin plugin) throws ClassNotFoundException, SQLException {
+        path = plugin.getDataFolder().getAbsolutePath() + "/bans";
         connect();
         setup();
         ConsoleLogger.info("Database setup finished");
