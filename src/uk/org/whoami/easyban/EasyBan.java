@@ -126,6 +126,7 @@ public class EasyBan extends JavaPlugin {
         getCommand("eban").setExecutor(new BanCommand(database));
         getCommand("eunban").setExecutor(new UnbanCommand(database));
         getCommand("ehistory").setExecutor(new HistoryCommand(database));
+        getCommand("ealt").setExecutor(new AlternativeCommand(database));
         getCommand("ealternative").setExecutor(new AlternativeCommand(database));
         getCommand("ebaninfo").setExecutor(new BanInfoCommand(database));
         getCommand("elistbans").setExecutor(new ListBansCommand(database));
