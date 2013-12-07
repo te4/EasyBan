@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.org.whoami.easyban.datasource;
 
 import java.net.InetAddress;
@@ -284,8 +283,7 @@ public abstract class SQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(
-                    "SELECT ip FROM ip "
-                    + "WHERE player_id IN (SELECT player_id FROM player_ban) AND ip=?;");
+                    "SELECT ip FROM ip JOIN player_ban USING (player_id) where ip=?;");
             pst.setString(1, ip);
             return pst.executeQuery().next();
         } catch (SQLException ex) {
@@ -335,8 +333,7 @@ public abstract class SQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(
-                    "SELECT player_id FROM player_ban "
-                    + "WHERE player_id=(SELECT player_id FROM player WHERE player=?);");
+                    "SELECT player_id FROM player JOIN player_ban USING (player_id) WHERE player=?;");
             pst.setString(1, nick);
             return pst.executeQuery().next();
         } catch (SQLException ex) {
@@ -378,8 +375,7 @@ public abstract class SQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(
-                    "SELECT player_id FROM whitelist "
-                    + "WHERE player_id=(SELECT player_id FROM player WHERE player=?);");
+                    "SELECT player_id FROM whitelist JOIN player USING (player_id) WHERE player=?;");
             pst.setString(1, nick);
             return pst.executeQuery().next();
         } catch (SQLException ex) {
@@ -401,8 +397,7 @@ public abstract class SQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(
-                    "SELECT ip FROM ip "
-                    + "WHERE player_id=(SELECT player_id FROM player WHERE player=?);");
+                    "SELECT ip FROM ip JOIN player using(player_id) WHERE player=?;");
             pst.setString(1, nick);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -429,8 +424,7 @@ public abstract class SQLDataSource implements DataSource {
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(
-                    "SELECT player FROM player "
-                    + "WHERE player_id IN (SELECT player_id FROM player_ban);");
+                    "SELECT player FROM player JOIN player_ban using (player_id);");
             while (rs.next()) {
                 list.add(rs.getString(1));
             }
@@ -503,8 +497,7 @@ public abstract class SQLDataSource implements DataSource {
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(
-                    "SELECT player FROM player "
-                    + "WHERE player_id IN (SELECT player_id FROM whitelist);");
+                    "SELECT player FROM player JOIN whitelist USING (player_id);");
             while (rs.next()) {
                 list.add(rs.getString(1));
             }
@@ -527,9 +520,7 @@ public abstract class SQLDataSource implements DataSource {
         ArrayList<String> list = new ArrayList<String>();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(
-                    "SELECT player FROM player "
-                    + "WHERE player_id IN (SELECT player_id FROM ip WHERE ip=?);");
+            pst = con.prepareStatement("SELECT player FROM player JOIN ip USING (player_id) WHERE ip=?;");
             pst.setString(1, ip);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -555,10 +546,8 @@ public abstract class SQLDataSource implements DataSource {
         Statement st = null;
         try {
             st = con.createStatement();
-            ResultSet rs = st.executeQuery(
-                    "SELECT player,until FROM player_ban "
-                    + "JOIN player ON player_ban.player_id=player.player_id "
-                    + "WHERE until IS NOT NULL;");
+            ResultSet rs = st.executeQuery("SELECT player,until FROM player_ban"
+                    + " JOIN player USING(player_id) WHERE until IS NOT NULL;");
             while (rs.next()) {
                 if (rs.getTimestamp(2).getTime() == 100000) {
                     continue;
@@ -578,7 +567,7 @@ public abstract class SQLDataSource implements DataSource {
 //        if (map.isEmpty()) {
 //        	return null;
 //        } else {
-        	return map;
+        return map;
 //        }
     }
 
@@ -588,8 +577,7 @@ public abstract class SQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(
-                    "SELECT admin,reason,until FROM player_ban "
-                    + "WHERE player_id=(SELECT player_id FROM player WHERE player=?);");
+                    "SELECT admin,reason,until FROM player_ban JOIN player USING (player_id) WHERE player=?;");
             pst.setString(1, nick);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -613,9 +601,9 @@ public abstract class SQLDataSource implements DataSource {
             }
         }
         if (map.isEmpty()) {
-        	return null;
+            return null;
         } else {
-        	return map;
+            return map;
         }
     }
 
@@ -645,9 +633,9 @@ public abstract class SQLDataSource implements DataSource {
             }
         }
         if (map.isEmpty()) {
-        	return null;
+            return null;
         } else {
-        	return map;
+            return map;
         }
     }
 }
