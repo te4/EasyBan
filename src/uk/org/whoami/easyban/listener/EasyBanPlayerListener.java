@@ -61,7 +61,7 @@ public class EasyBanPlayerListener implements Listener {
         }
 
         String name = event.getPlayer().getName();
-        String ip = event.getKickMessage();
+        String ip = event.getAddress().getHostAddress();
 
         database.addIpToHistory(name, ip);
 
